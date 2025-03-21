@@ -50,3 +50,62 @@ func visitAllNodes2(_ node: Node?) {
         }
     }
 }
+
+class LinkedListNode<T> {
+    var value: T
+    var next: LinkedListNode?
+    
+    init(value: T) {
+        self.value = value
+    }
+}
+
+class LinkedListQueue<T> {
+    private var head: LinkedListNode<T>?
+    private var tail: LinkedListNode<T>?
+
+    var isEmpty: Bool {
+       head == nil
+    }
+
+    private(set) var count = 0
+
+    func enqueue(_ element: T) {
+        count += 1
+        let newNode = LinkedListNode(value: element)
+        if let tailNode = tail {
+            tailNode.next = newNode
+        } else {
+            head = newNode
+        }
+        tail = newNode
+    }
+
+    func dequeue() -> T? {
+        guard let headNode = head else { return nil }
+        count -= 1
+        head = headNode.next
+        if head == nil {
+            tail = nil
+        }
+        return headNode.value
+    }
+}
+
+func visitAllNodes3(_ node: Node) {
+    let queue = LinkedListQueue<Node>()
+    queue.enqueue(node)
+    
+    while !queue.isEmpty {
+        for _ in 1...queue.count {
+            let node = queue.dequeue()
+            print(node?.value ?? "")
+            if let left = node?.left {
+                queue.enqueue(left)
+            }
+            if let right = node?.right {
+                queue.enqueue(right)
+            }
+        }
+    }
+}
